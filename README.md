@@ -1,10 +1,14 @@
-onelinerrogue-src
+One Liner Rogue source code
 =================
 
 This is the source code of one liner rogue currently in development.
 This project does not contain data or actual project, as it uses many other items whose license doesn't permit for sharing. 
 
 The source code under this project is shared under MIT license. 
+
+If you wish to check out current dev status of OLR, please visit:
+
+* http://monkeycoders.tumblr.com/
 
 License
 =================
