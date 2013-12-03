@@ -60,6 +60,11 @@ public class EnemyActor : Actor {
 
 	protected override void PerformTurnAction(GameManager gm) {
 
+		if(!IsVisible()) {
+			m_isOnActionNow = false;
+			return;
+		}
+
 		m_value = (m_value == 1) ? -1 : 1;
 
 		Actor naborLeft  = this.step.GetStep(-1).actorOnStep;

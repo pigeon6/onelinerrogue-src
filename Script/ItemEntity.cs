@@ -37,8 +37,8 @@ public class ItemEntity : ScriptableObject {
 			def[i] 	= p.def[i];
 		}
 
-		statPoison = p.statPoison;
-		statParalize = p.statParalize;
+		statPoison = (float)p.statPoison;
+		statParalize = (float)p.statParalize;
 
 		if( p.kind == "food" 	) kind = Kind.Food;
 		if( p.kind == "weapon" 	) kind = Kind.Weapon;
@@ -104,47 +104,42 @@ public class ItemEntity : ScriptableObject {
 		GUIManager.GetManager().Message(a.charName + " は " + itemName + " を みにつけた！" );
 	}
 
+	private void _TestStatusApply(Actor a) {
+
+		float prob = Random.Range (0.01f, 1.0f);
+		Debug.Log ("[Item][Poison] " + prob + "/" + Mathf.Abs(statPoison));
+		if( prob <= Mathf.Abs(statPoison) ) {
+			if( statPoison > 0.0f ) {
+				a.ResolveStatus(StatusModifier.Kind.Poison);
+			} else {
+				a.SpawnEffect("PoisonItem");
+				a.AttachStatus(StatusModifier.Kind.Poison);
+			}
+		}
+
+		prob = Random.Range (0.01f, 1.0f);
+		Debug.Log ("[Item][Paralize] " + prob + "/" + Mathf.Abs(statParalize));
+		if( prob <= Mathf.Abs(statParalize) ) {
+			if( statParalize > 0.0f ) {
+				a.ResolveStatus(StatusModifier.Kind.Paralized);
+			} else {
+				a.SpawnEffect("Paralize");
+				a.AttachStatus(StatusModifier.Kind.Paralized);
+			}
+		}
+	}
+
 	/*
 	 * ItemEntry instance may be overrided by a few unique items
 	 */
 	public virtual void UseBy(Actor a) {
 		if( kind == Kind.Food ) {
-			GUIManager.GetManager().Message(a.charName + " は " + itemName + " を たべた！" );
-			a.ApplyHpGain((int)gainHp);
-			a.hunger = Mathf.Clamp (a.hunger + gainHunger, 0.0f, a.hungerMax);
+			a.Eat (this);
 		} else {
 			GUIManager.GetManager().Message(a.charName + " は " + itemName + " を つかった！" );
 		}
 
-		if( statPoison > 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Poison] " + prob + "/" + statPoison);
-			if( prob <= statPoison ) {
-				a.ResolveStatus(StatusModifier.Kind.Poison);
-			}
-		}
-		else if( statPoison < 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Poison] " + prob + "/" + Mathf.Abs(statPoison));
-			if( prob <= Mathf.Abs(statPoison) ) {
-				a.AttachStatus(StatusModifier.Kind.Poison);
-			}
-		}
-
-		if( statParalize > 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Paralize] " + prob + "/" + statParalize);
-			if( prob <= statParalize ) {
-				a.ResolveStatus(StatusModifier.Kind.Paralized);
-			}
-		}
-		else if( statParalize < 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Paralize] " + prob + "/" + Mathf.Abs(statParalize));
-			if( prob <= Mathf.Abs(statParalize) ) {
-				a.AttachStatus(StatusModifier.Kind.Paralized);
-			}
-		}
+		_TestStatusApply(a);
 
 		if(WillUseConsumeItem) {
 			Destroy (this);
@@ -185,6 +180,7 @@ public class ItemEntity : ScriptableObject {
 		
 		if( dmg > 0 ) {
 			GUIManager.GetManager().Message(target.charName + " に " + dmg + " の ダメージあたえた！" );
+			_TestStatusApply(target);
 			return target.ApplyDamage(dmg);
 		} else {
 			GUIManager.GetManager().Message(target.charName + " に ダメージをあたえられない！" );
@@ -199,35 +195,7 @@ public class ItemEntity : ScriptableObject {
 	 */
 	public virtual bool HitBy(Actor target, Actor thrower) {
 
-		if( statPoison > 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Poison] " + prob + "/" + statPoison);
-			if( prob <= statPoison ) {
-				target.ResolveStatus(StatusModifier.Kind.Poison);
-			}
-		}
-		else if( statPoison < 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Poison] " + prob + "/" + Mathf.Abs(statPoison));
-			if( prob <= Mathf.Abs(statPoison) ) {
-				target.AttachStatus(StatusModifier.Kind.Poison);
-			}
-		}
-		
-		if( statParalize > 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Paralize] " + prob + "/" + statParalize);
-			if( prob <= statParalize ) {
-				target.ResolveStatus(StatusModifier.Kind.Paralized);
-			}
-		}
-		else if( statParalize < 0.0f ) {
-			float prob = Random.Range (0.0f, 1.0f);
-			Debug.Log ("[Item][Paralize] " + prob + "/" + Mathf.Abs(statParalize));
-			if( prob <= Mathf.Abs(statParalize) ) {
-				target.AttachStatus(StatusModifier.Kind.Paralized);
-			}
-		}
+		_TestStatusApply(target);
 
 		int dmg = thrower.CalcurateThrowDamageOfItem(this, target, ElementType.ET_Physical);
 

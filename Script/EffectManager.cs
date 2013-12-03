@@ -7,6 +7,7 @@ public enum ActorSE {
 	JumpLand,
 	ItemPickup,
 	ItemThrow,
+	ItemEat,
 }
 
 public class EffectManager : MonoBehaviour {
@@ -35,7 +36,7 @@ public class EffectManager : MonoBehaviour {
 	public void Spawn(string effectName, Vector3 pos) {
 		foreach(Effect e in m_effects){
 			if( e.effectName == effectName ) {
-				pos.z = 2.0f;
+				pos.z = -3.0f;
 				GameObject.Instantiate(e.effectFab, pos, e.effectFab.transform.rotation);
 				break;
 			}
@@ -46,7 +47,7 @@ public class EffectManager : MonoBehaviour {
 		foreach(Effect e in m_effects){
 			if( e.effectName == effectName ) {
 //				Vector3 pos = targetStep.GetActorPos();
-				targetPos.z = 2.0f;
+				targetPos.z = -3.0f;
 				GameObject.Instantiate(e.effectFab, targetPos, e.effectFab.transform.rotation);
 				break;
 			}

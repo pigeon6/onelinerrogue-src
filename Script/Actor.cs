@@ -107,6 +107,7 @@ public class Actor : AbstractActor {
 	static public int kMAX_ITEM_CARRY = 8;
 
 	static public Vector3 chipOffset = new Vector3(-0.75f, 0.75f, 0.0f);
+	static public Vector3 effectOffset = new Vector3(-0.75f, 0.75f, -3.0f);
 
 	public bool m_isOnActionNow = false;
 
@@ -345,7 +346,7 @@ public class Actor : AbstractActor {
 				
 				bool doesHit = TestAttackHit(target, armedWeapon);
 				if(doesHit) {
-					effects.Spawn(AttackEffect, target.transform.position + chipOffset);
+					effects.Spawn(AttackEffect, target.transform.position + effectOffset);
 				}
 				
 				int nextTargetOffset = (m_currentDirection == DirectionType.LEFT) ? -1 : 1;
@@ -424,7 +425,7 @@ public class Actor : AbstractActor {
 
 		if(TestAttackHit(target, armedWeapon)) {
 			alive = ItemEntity.AttackBy(armedWeapon, target, this, 1.0f);
-			effects.Spawn(AttackEffect, target.transform.position + chipOffset);
+			effects.Spawn(AttackEffect, target.transform.position + effectOffset);
 			while(target.gauge.IsAnimating) {
 				yield return new WaitForEndOfFrame();
 			}
@@ -691,7 +692,7 @@ public class Actor : AbstractActor {
 		else {
 			Item itemOnGround = throwTargetStep.itemOnStep;
 			if(itemOnGround != null) {
-				effects.Spawn("ThrowHitItemOnGround", itemOnGround.transform.position + chipOffset);
+				effects.Spawn("ThrowHitItemOnGround", itemOnGround.transform.position + effectOffset);
 				GUIManager.GetManager().Message(itemOnGround.ItemName + " に ぶつかった！" );
 				GUIManager.GetManager().Message(itemOnGround.ItemName + " は こわれてしまった。" );
 				Destroy (itemOnGround.gameObject);// destroy housing, not entity
@@ -723,7 +724,7 @@ public class Actor : AbstractActor {
 		}
 		if( damage != 0 ) {
 			DamageKind dk = (race==Race.Human)?DamageKind.PlayerDamage:DamageKind.EnemyDamage;
-			effects.SpawnDamage(damage, dk, transform.position + chipOffset);
+			effects.SpawnDamage(damage, dk, transform.position + effectOffset);
 			gauge.ApplyGaugeValueTo(oldHp/hpMax, hp/hpMax);
 		}
 
@@ -739,7 +740,7 @@ public class Actor : AbstractActor {
 				effects.CameraTremble();
 			}
 			DamageKind dk = (gain>0)?DamageKind.Cure:DamageKind.PlayerDamage;
-			effects.SpawnDamage(gain, dk, transform.position + chipOffset);
+			effects.SpawnDamage(gain, dk, transform.position + effectOffset);
 			gauge.ApplyGaugeValueTo(oldHp/hpMax, hp/hpMax);
 		}
 		
@@ -940,10 +941,25 @@ public class Actor : AbstractActor {
 	public void Die() {
 		SendMessage("OnPreDie", SendMessageOptions.DontRequireReceiver);
 		dead = true;
-		effects.Spawn("Die",transform.position + chipOffset);
+		SpawnEffect("Die");
 
 		SendMessage("OnPostDie", SendMessageOptions.DontRequireReceiver);
 		Destroy (gameObject);
+	}
+
+	public void Eat(ItemEntity e) {
+		GUIManager.GetManager().Message(charName + " は " + e.itemName + " を たべた！" );
+		PlaySE(ActorSE.ItemEat);
+		ApplyHpGain((int)e.gainHp);
+		hunger = Mathf.Clamp (hunger + e.gainHunger, 0.0f, hungerMax);
+	}
+
+	public void SpawnEffect(string effect) {
+		effects.Spawn(effect,transform.position + effectOffset);
+	}
+
+	public void PlaySE(ActorSE ase) {
+		effects.PlaySE(this, ase);
 	}
 
 	public void PlayEmotionOnce(Emotion.Kind k) {

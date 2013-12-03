@@ -73,8 +73,8 @@ public class ItemData_importer : AssetPostprocessor {
 					cell = row.GetCell(21); p.def[5] = (int)(cell == null ? 0 : cell.NumericCellValue);
 					cell = row.GetCell(22); p.def[6] = (int)(cell == null ? 0 : cell.NumericCellValue);
 					cell = row.GetCell(23); p.def[7] = (int)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(24); p.statPoison = (int)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(25); p.statParalize = (int)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(24); p.statPoison = (cell == null ? 0.0 : cell.NumericCellValue);
+					cell = row.GetCell(25); p.statParalize = (cell == null ? 0.0 : cell.NumericCellValue);
 					cell = row.GetCell(26); p.description = (cell == null ? "" : cell.StringCellValue);
 						} catch(System.Exception e) {
 							Debug.LogWarning ("[WARNING]" + sheetName + " ROW("+i+"): "+ e.Message);

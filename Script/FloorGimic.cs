@@ -35,9 +35,11 @@ public class FloorGimic : MonoBehaviour {
 		}
 		//TODO
 		if( m_fgData.graphic == "PoisonFloor" ) {
+			a.SpawnEffect("PoisonWell");
 			a.AttachStatus(StatusModifier.Kind.Poison);
 		}
 		if( m_fgData.graphic == "ParalizeFloor" ) {
+			a.SpawnEffect("Paralize");
 			a.AttachStatus(StatusModifier.Kind.Paralized);
 		}
 		Debug.Log ("[FloorGimic] Enter action ("+m_fgData.onFloorAction+") to:" + a.charName );

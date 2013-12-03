@@ -27,8 +27,8 @@ public class ItemData : ScriptableObject
 		public int gainHitpoint;
 		public int[] ap;
 		public int[] def;
-		public int statPoison;
-		public int statParalize;
+		public double statPoison;
+		public double statParalize;
 		public string description;
 	}
 }
