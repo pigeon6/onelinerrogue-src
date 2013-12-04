@@ -98,6 +98,16 @@ public class Quest : MonoBehaviour {
 		}
 	}
 	
+	public bool QuestAction_QuestClearAndWait(string questName) {
+		if( m_inturrptingCount == 0 ) {
+			GUIManager.GetManager().DoQuestClear(questName, _WaitForCutsceneEnd);
+			++m_inturrptingCount;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public void Gimic_GenerateTA(string val, int step) {
 		// TODO: put this into map
 		foreach(TA t in m_tas) {

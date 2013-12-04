@@ -9,6 +9,7 @@ public class QuestEntity : ScriptableObject {
 	public enum Kind {
 		DialogEvent,
 		Terop,
+		QuestClear,
 	}
 
 	public int id;
@@ -23,20 +24,35 @@ public class QuestEntity : ScriptableObject {
 	public bool IsCompleted { get { return isCompleted; } }
 
 	public void DoEvent() {
-		if(kind == Kind.DialogEvent) {
+		switch(kind) {
+		case Kind.DialogEvent:
 			parent.QuestAction_CutScene(messages);
-		} else if( kind == Kind.Terop ) {
+			break;
+		case Kind.Terop:
 			parent.QuestAction_TeropAndWait( messages[0] );
+			break;
+		case Kind.QuestClear:
+			parent.QuestAction_QuestClearAndWait( parent.QuestName );
+			break;
 		}
 	}
 
 	public void NotifyEventProceed() {
 		if( kind == Kind.DialogEvent ) {
 			Debug.Log ("[EventEntity] event:"+id +" | event complete!");
+			if(isEndEvent) {
+				kind = Kind.QuestClear;
+			} else {
+				condition = null;
+				isCompleted  = true;
+			}
+		}
+		else if( kind == Kind.Terop ) {
+			Debug.Log ("[EventEntity] event:"+id +" | event complete!");
 			condition = null;
 			isCompleted  = true;
 		}
-		if( kind == Kind.Terop ) {
+		else if( kind == Kind.QuestClear ) {
 			Debug.Log ("[EventEntity] event:"+id +" | event complete!");
 			condition = null;
 			isCompleted  = true;

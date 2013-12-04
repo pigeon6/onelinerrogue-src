@@ -9,6 +9,8 @@ public enum GUISE {
 	WindowClose,
 	ButtonNotAvailable,
 	Select,
+	QuestClear,
+	Terop
 }
 
 public class GUIManager : MonoBehaviour {
@@ -146,5 +148,8 @@ public class GUIManager : MonoBehaviour {
 	}
 	public void DoTerop(string msg,InputActionHandler h) {
 		menuGui.DoTerop(msg,h);
+	}
+	public void DoQuestClear(string questName,InputActionHandler h) {
+		menuGui.DoQuestClear(questName,h);
 	}
 }

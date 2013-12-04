@@ -13,6 +13,9 @@ public class TeropWindowController : iGUI.iGUIAction, WindowController {
 	private iGUI.iGUILabel m_teropMessage;
 
 	[SerializeField]
+	private iGUI.iGUILabel m_questMessage;
+
+	[SerializeField]
 	private float m_teropfedeinoutSec = 1.0f;
 	
 	[SerializeField]
@@ -44,19 +47,45 @@ public class TeropWindowController : iGUI.iGUIAction, WindowController {
 		m_isShowing = true;
 		
 		Color c = Color.white;
+		c.a = 0.0f;
 
 		m_teropMessage.label.text = msg;
 		m_teropMessage.setLabelColor(c);
 		ShowWindow();
 
+		SoundManager.GetManager().FadeoutBGM(m_teropfedeinoutSec);
+		float tNow = Time.time;
+		while( Time.time - tNow <= m_teropfedeinoutSec ) {
+			float rate = (Time.time - tNow) / m_teropfedeinoutSec;
+
+			c.a = rate;
+
+			m_questMessage.setLabelColor(c);
+
+			yield return new WaitForEndOfFrame();
+		}
 		yield return new WaitForSeconds(m_teropShowSec);
 
-		float tNow = Time.time;
+		GUIManager.GetManager().PlayGUISE(GUISE.Terop);
+		tNow = Time.time;
+		while( Time.time - tNow <= m_teropfedeinoutSec ) {
+			float rate = (Time.time - tNow) / m_teropfedeinoutSec;	
+			c.a = rate;
+			m_teropMessage.setLabelColor(c);
+			yield return new WaitForEndOfFrame();
+		}
+
+		yield return new WaitForSeconds(m_teropShowSec);
+
+
+		SoundManager.GetManager().FadeinBGM(m_teropfedeinoutSec);
+		tNow = Time.time;
 		while( Time.time - tNow <= m_teropfedeinoutSec ) {
 			float rate = (Time.time - tNow) / m_teropfedeinoutSec;
 
 			c.a = 1.0f - rate;
 
+			m_questMessage.setLabelColor(c);
 			m_teropMessage.setLabelColor(c);
 
 			yield return new WaitForEndOfFrame();

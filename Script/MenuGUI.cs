@@ -23,6 +23,9 @@ public class MenuGUI : MonoBehaviour {
 	private TeropWindowController m_terop; 
 
 	[SerializeField]
+	private QuestClearWindowController m_questClear; 
+
+	[SerializeField]
 	private PressButtonWaitController m_pbControl; 
 	
 	Stack<WindowController> m_windowStack;
@@ -119,6 +122,9 @@ public class MenuGUI : MonoBehaviour {
 		m_terop.DoTerop(msg, h);
 	}
 
+	public void DoQuestClear(string questName, InputActionHandler h) {
+		m_questClear.DoQuestClear(questName, h);
+	}
 
 	public void DoCutsceneWithMessages(List<string> msgs, InputActionHandler h) {
 		if(m_cutScene.IsOpen() ) {
