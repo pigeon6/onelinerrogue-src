@@ -6,8 +6,14 @@ public class StatusGUI : MonoBehaviour {
 	[SerializeField]
 	iGUI.iGUILabel m_label;
 
-	[SerializeField]
-	GameManager m_gm;
+	public bool visible {
+		get {
+			return m_label.enabled;
+		}
+		set {
+			m_label.setEnabled(value);
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +21,9 @@ public class StatusGUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		_FormatStatus();
+		if(visible){
+			_FormatStatus();
+		}
 	}
 
 	void _FormatStatus() {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LocalGameSession : MonoBehaviour {
 
@@ -7,7 +8,7 @@ public class LocalGameSession : MonoBehaviour {
 
 	// index of QuestDatabase.sheet
 	public int currentQuest;
-	public int completedQuest;
+	public List<int> completedQuests;
 
 	public static LocalGameSession GetSession() {
 		if( s_manager == null ) {
@@ -24,9 +25,19 @@ public class LocalGameSession : MonoBehaviour {
 		return s_manager;
 	}
 
+	public void MarkQuestComplete(int questId) {
+		if( !completedQuests.Contains(questId) ) {
+			completedQuests.Add (questId);
+		}
+	}
+
+	public bool IsQuestCompleted(int questId) {
+		return completedQuests.Contains(questId);
+	}
+
 	void Awake() {
 		currentQuest = 0;
-		completedQuest = -1;
+		completedQuests = new List<int>();
 		DontDestroyOnLoad(gameObject);
 	}
 }

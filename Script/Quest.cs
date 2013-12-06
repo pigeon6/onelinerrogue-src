@@ -140,8 +140,7 @@ public class Quest : MonoBehaviour {
 	public bool ProceedEvent() {
 
 		if( m_questComplete ) {
-			LocalGameSession.GetSession().completedQuest = Mathf.Max (m_questIdx, LocalGameSession.GetSession().completedQuest);
-			LocalGameSession.GetSession().currentQuest = m_questIdx + 1;
+			LocalGameSession.GetSession().MarkQuestComplete(m_questIdx);
 			m_gm.ExitGame();
 			return false;
 		}

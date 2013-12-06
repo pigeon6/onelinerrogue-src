@@ -144,6 +144,10 @@ public class GameManager : MonoBehaviour {
 
 	private void _StartGame(object[] args, CommandChain cc) {
 		UserInput.GetUserInput().PopActionEventStack();
+
+		GUIManager.GetManager().ShowMessageWindow(true);
+		GUIManager.GetManager().ShowStatusGUI(true);
+
 		_StartTurnSystem();
 		SoundManager.GetManager().PlayBGM(BGMTrack.Quest);
 	}

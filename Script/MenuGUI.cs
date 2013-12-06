@@ -28,6 +28,9 @@ public class MenuGUI : MonoBehaviour {
 	[SerializeField]
 	private PressButtonWaitController m_pbControl; 
 	
+	[SerializeField]
+	private QuestSelectWindowController m_questSelection; 
+
 	Stack<WindowController> m_windowStack;
 
 	void Awake() {
@@ -106,6 +109,19 @@ public class MenuGUI : MonoBehaviour {
 		}
 		
 		m_windowStack.Push(m_statusWindow);
+	}
+
+	public void ShowQuestSelectionWindow() {
+		// push stack to prevent getting multiple show window event
+		UserInput.GetUserInput().PushActionEventStack();
+		m_questSelection.ShowWindow();
+		
+		if( m_windowStack.Count > 0 ) {
+			WindowController w = m_windowStack.Peek();
+			w.UnfocusWindow();
+		}
+		
+		m_windowStack.Push(m_questSelection);
 	}
 
 	public void ShowIndicatorAndWait(InputActionHandler h = null) {

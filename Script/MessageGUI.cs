@@ -7,10 +7,22 @@ public class MessageGUI : MonoBehaviour {
 	private const int kMSG_LINES = 6;
 
 	[SerializeField]
+	private iGUI.iGUIPanel m_panel;
+
+	[SerializeField]
 	private iGUI.iGUILabel m_label;
 
 	private List<string> m_messages;
 	
+	public bool visible {
+		get {
+			return m_panel.enabled;
+		}
+		set {
+			m_panel.setEnabled(value);
+		}
+	}
+
 	public void AppendMessage(string msg) {
 		m_messages.Add(msg);
 		_UpdateMessage();

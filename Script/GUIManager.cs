@@ -92,6 +92,14 @@ public class GUIManager : MonoBehaviour {
 		debugMessageGui.AppendMessage(msg);
 	}
 
+	public void ShowMessageWindow(bool bShow) {
+		messageGui.visible = bShow;
+	}
+
+	public void ShowStatusGUI(bool bShow) {
+		statusGui.visible = bShow;
+	}
+
 	public void HideTopWindow() {
 		if( !audio.isPlaying ) {
 			PlayGUISE(GUISE.WindowClose);
@@ -127,7 +135,12 @@ public class GUIManager : MonoBehaviour {
 		PlayGUISE(GUISE.WindowOpen);
 		menuGui.ShowIndicatorAndWait();
 	}
-	
+
+	public void ShowQuestSelectionWindow() {
+		PlayGUISE(GUISE.WindowOpen);
+		menuGui.ShowQuestSelectionWindow();
+	}
+
 	public void FadeoutFromBlack(float tFadeSec, float tFadeDelaySec = 0.0f, CommandChain cc = null) {
 		m_fsControl.FadeoutFromBlack(tFadeSec, tFadeDelaySec, cc);
 	}
